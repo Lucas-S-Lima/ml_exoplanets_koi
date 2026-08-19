@@ -1,0 +1,635 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Nova Análise | Exoplanet Classifier</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{% static 'core/css/styles.css' %}"
+    >
+</head>
+
+<body>
+
+<!-- Header -->
+<header class="page-header py-4 shadow-sm">
+
+    <div class="container">
+
+        <div class="d-flex align-items-center gap-3">
+
+            <div class="fs-2">
+                <i class="bi bi-stars"></i>
+            </div>
+
+            <div>
+                <h1 class="h3 mb-1">
+                    Nova análise
+                </h1>
+
+                <p class="mb-0 text-white-50">
+                    Informe os parâmetros observacionais do candidato
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<main class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-xl-9">
+
+            <div class="card form-card shadow-sm">
+
+                <div class="card-body p-4 p-lg-5">
+
+                    <!-- Introduction -->
+                    <div class="mb-4">
+
+                        <h2 class="h5 section-title">
+                            <i class="bi bi-database me-2"></i>
+                            Dados astronômicos
+                        </h2>
+
+                        <p class="text-muted mb-0">
+                            Preencha os parâmetros observacionais utilizados
+                            pelo modelo preditivo para realizar a classificação.
+                        </p>
+
+                    </div>
+
+
+                    <form method="POST" id="analysisForm">
+
+                        {% csrf_token %}
+
+                        <!-- Identification -->
+                        <div class="mb-4">
+
+                            <label
+                                for="name"
+                                class="form-label fw-semibold"
+                            >
+                                Nome da análise
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="name"
+                                name="name"
+                                maxlength="80"
+                                placeholder="Ex.: Candidato KOI-1234"
+                            >
+
+                            <div class="form-text">
+                                Um nome para identificar esta análise posteriormente.
+                            </div>
+
+                        </div>
+
+
+                        <hr class="my-4">
+
+
+                        <!-- Astronomical Parameters -->
+                        <div class="row g-4">
+
+                            <!-- Orbital Period -->
+                            <div class="col-md-6">
+
+                                <label
+                                    for="orbital_period_days"
+                                    class="form-label fw-semibold"
+                                >
+                                    Período orbital
+                                </label>
+
+                                <div class="input-group">
+
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        min="0"
+                                        class="form-control"
+                                        id="orbital_period_days"
+                                        name="orbital_period_days"
+                                        placeholder="Ex.: 10.5"
+                                        
+                                    >
+
+                                    <span class="input-group-text">
+                                        dias
+                                    </span>
+
+                                </div>
+
+                                <div class="form-text">
+                                    Tempo necessário para completar uma órbita.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Transit Duration -->
+                            <div class="col-md-6">
+
+                                <label
+                                    for="transit_duration_hours"
+                                    class="form-label fw-semibold"
+                                >
+                                    Duração do trânsito
+                                </label>
+
+                                <div class="input-group">
+
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        min="0"
+                                        class="form-control"
+                                        id="transit_duration_hours"
+                                        name="transit_duration_hours"
+                                        placeholder="Ex.: 2.35"
+                                        
+                                    >
+
+                                    <span class="input-group-text">
+                                        horas
+                                    </span>
+
+                                </div>
+
+                                <div class="form-text">
+                                    Duração observada do trânsito planetário.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Transit Depth -->
+                            <div class="col-md-6">
+
+                                <label
+                                    for="transit_depth_ppm"
+                                    class="form-label fw-semibold"
+                                >
+                                    Profundidade do trânsito
+                                </label>
+
+                                <div class="input-group">
+
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        min="0"
+                                        class="form-control"
+                                        id="transit_depth_ppm"
+                                        name="transit_depth_ppm"
+                                        placeholder="Ex.: 450"
+                                        
+                                    >
+
+                                    <span class="input-group-text">
+                                        ppm
+                                    </span>
+
+                                </div>
+
+                                <div class="form-text">
+                                    Redução relativa do brilho da estrela durante o trânsito.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Planet Radius -->
+                            <div class="col-md-6">
+
+                                <label
+                                    for="planet_radius_earth"
+                                    class="form-label fw-semibold"
+                                >
+                                    Raio do planeta
+                                </label>
+
+                                <div class="input-group">
+
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        min="0"
+                                        class="form-control"
+                                        id="planet_radius_earth"
+                                        name="planet_radius_earth"
+                                        placeholder="Ex.: 1.25"
+                                        
+                                    >
+
+                                    <span class="input-group-text">
+                                        R⊕
+                                    </span>
+
+                                </div>
+
+                                <div class="form-text">
+                                    Raio estimado em relação ao raio da Terra.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Insolation Flux -->
+                            <div class="col-md-6">
+
+                                <label
+                                    for="insolation_flux_earth"
+                                    class="form-label fw-semibold"
+                                >
+                                    Fluxo de insolação
+                                </label>
+
+                                <div class="input-group">
+
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        min="0"
+                                        class="form-control"
+                                        id="insolation_flux_earth"
+                                        name="insolation_flux_earth"
+                                        placeholder="Ex.: 1.15"
+                                    
+                                    >
+
+                                    <span class="input-group-text">
+                                        S⊕
+                                    </span>
+
+                                </div>
+
+                                <div class="form-text">
+                                    Fluxo recebido em relação ao fluxo solar na Terra.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Equilibrium Temperature -->
+                            <div class="col-md-6">
+
+                                <label
+                                    for="equilibrium_temperature_k"
+                                    class="form-label fw-semibold"
+                                >
+                                    Temperatura de equilíbrio
+                                </label>
+
+                                <div class="input-group">
+
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        min="0"
+                                        class="form-control"
+                                        id="equilibrium_temperature_k"
+                                        name="equilibrium_temperature_k"
+                                        placeholder="Ex.: 300"
+                                        
+                                    >
+
+                                    <span class="input-group-text">
+                                        K
+                                    </span>
+
+                                </div>
+
+                                <div class="form-text">
+                                    Temperatura de equilíbrio estimada do planeta.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Impact Parameter -->
+                            <div class="col-md-6">
+
+                                <label
+                                    for="impact_parameter"
+                                    class="form-label fw-semibold"
+                                >
+                                    Parâmetro de impacto
+                                </label>
+
+                                <input
+                                    type="number"
+                                    step="any"
+                                    min="0"
+                                    class="form-control"
+                                    id="impact_parameter"
+                                    name="impact_parameter"
+                                    placeholder="Ex.: 0.45"
+                                    
+                                >
+
+                                <div class="form-text">
+                                    Distância projetada entre o centro da estrela
+                                    e a trajetória do planeta durante o trânsito.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Transit SNR -->
+                            <div class="col-md-6">
+
+                                <label
+                                    for="transit_signal_to_noise"
+                                    class="form-label fw-semibold"
+                                >
+                                    Relação sinal-ruído do trânsito
+                                </label>
+
+                                <div class="input-group">
+
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        min="0"
+                                        class="form-control"
+                                        id="transit_signal_to_noise"
+                                        name="transit_signal_to_noise"
+                                        placeholder="Ex.: 12.5"
+                                        
+                                    >
+
+                                    <span class="input-group-text">
+                                        S/N
+                                    </span>
+
+                                </div>
+
+                                <div class="form-text">
+                                    Relação entre o sinal observado e o ruído.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Stellar Temperature -->
+                            <div class="col-md-6">
+
+                                <label
+                                    for="stellar_effective_temperature_k"
+                                    class="form-label fw-semibold"
+                                >
+                                    Temperatura efetiva da estrela
+                                </label>
+
+                                <div class="input-group">
+
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        min="0"
+                                        class="form-control"
+                                        id="stellar_effective_temperature_k"
+                                        name="stellar_effective_temperature_k"
+                                        placeholder="Ex.: 5778"
+                                        
+                                    >
+
+                                    <span class="input-group-text">
+                                        K
+                                    </span>
+
+                                </div>
+
+                                <div class="form-text">
+                                    Temperatura efetiva da estrela hospedeira.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Stellar Gravity -->
+                            <div class="col-md-6">
+
+                                <label
+                                    for="stellar_surface_gravity"
+                                    class="form-label fw-semibold"
+                                >
+                                    Gravidade superficial da estrela
+                                </label>
+
+                                <div class="input-group">
+
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        min="0"
+                                        class="form-control"
+                                        id="stellar_surface_gravity"
+                                        name="stellar_surface_gravity"
+                                        placeholder="Ex.: 4.44"
+                                        
+                                    >
+
+                                    <span class="input-group-text">
+                                        log(g)
+                                    </span>
+
+                                </div>
+
+                                <div class="form-text">
+                                    Gravidade superficial da estrela hospedeira.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Stellar Radius -->
+                            <div class="col-md-6">
+
+                                <label
+                                    for="stellar_radius_solar"
+                                    class="form-label fw-semibold"
+                                >
+                                    Raio da estrela
+                                </label>
+
+                                <div class="input-group">
+
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        min="0"
+                                        class="form-control"
+                                        id="stellar_radius_solar"
+                                        name="stellar_radius_solar"
+                                        placeholder="Ex.: 1.02"
+                                        
+                                    >
+
+                                    <span class="input-group-text">
+                                        R☉
+                                    </span>
+
+                                </div>
+
+                                <div class="form-text">
+                                    Raio estelar em relação ao raio do Sol.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Kepler Magnitude -->
+                            <div class="col-md-6">
+
+                                <label
+                                    for="kepler_magnitude"
+                                    class="form-label fw-semibold"
+                                >
+                                    Magnitude Kepler
+                                </label>
+
+                                <input
+                                    type="number"
+                                    step="any"
+                                    min="0"
+                                    class="form-control"
+                                    id="kepler_magnitude"
+                                    name="kepler_magnitude"
+                                    placeholder="Ex.: 12.45"
+                                    
+                                >
+
+                                <div class="form-text">
+                                    Magnitude aparente da estrela no sistema fotométrico Kepler.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Disclaimer -->
+                        <div class="alert alert-light border mt-5 mb-4">
+
+                            <div class="d-flex gap-3">
+
+                                <i class="bi bi-info-circle text-primary fs-5"></i>
+
+                                <div>
+                                    <strong>Sobre a análise</strong>
+
+                                    <p class="mb-0 text-muted small mt-1">
+                                        Os parâmetros informados serão processados
+                                        pelo modelo de Machine Learning treinado
+                                        previamente para estimar a classificação
+                                        do candidato.
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Submit -->
+                        <div class="d-flex justify-content-end gap-2">
+
+                            <a
+                                href="{% url 'analyses-form' %}"
+                                class="btn btn-outline-secondary px-4"
+                            >
+                                Cancelar
+                            </a>
+
+                            <button
+                                type="submit"
+                                id="submitButton"
+                                class="btn btn-primary px-4"
+                            >
+                                <i class="bi bi-stars"></i>
+                                Executar análise
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- Analysis Loading Overlay -->
+<div
+    id="analysisLoading"
+    class="position-fixed top-0 start-0 w-100 h-100 d-none"
+    style="
+        z-index: 9999;
+        background: rgba(8, 11, 24, 0.97);
+    "
+>
+    <div class="d-flex justify-content-center align-items-center h-100">
+
+        <div class="text-center px-4">
+
+            <img
+                src="{% static 'images/planet.png' %}"
+                alt="Planetas"
+                class="loading-planets mb-4"
+                style="width: 120px; height: auto;"
+            >
+
+            <h4 class="text-white mb-2">
+                Estamos analisando o objeto astronômico informado...
+            </h4>
+
+            <p class="text-white-50 mb-0">
+                O modelo preditivo está processando os parâmetros fornecidos.
+            </p>
+
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'core/js/script.js' %}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,85 @@
+body {
+    background-color: #f5f7fb;
+}
+
+.page-header {
+    background: #0d1b2a;
+    color: white;
+    padding: 1rem 0;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.page-header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.form-card {
+    border: 0;
+    border-radius: 16px;
+}
+
+.section-title {
+    font-weight: 600;
+    color: #0d1b2a;
+}
+
+.field-unit {
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.form-control:focus {
+    border-color: #6c63ff;
+    box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.15);
+}
+
+.btn-analyze {
+    background-color: #6c63ff;
+    border-color: #6c63ff;
+    color: white;
+}
+
+.btn-analyze:hover {
+    background-color: #5148d8;
+    border-color: #5148d8;
+    color: white;
+}
+
+.loading-planets {
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 1.5rem;
+
+    animation: planetFloat 2s ease-in-out infinite;
+}
+
+.head-title {
+    font-weight: 600;
+    font-size: large;
+    color: #6c63ff;
+}
+
+.head-image-planet {
+    width: 20px;
+    height: 20px;
+}
+
+@keyframes planetFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-40px);
+    }
+}
