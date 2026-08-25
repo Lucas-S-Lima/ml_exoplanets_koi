@@ -79,7 +79,12 @@ A acurácia final obtida foi de **0,9246**, correspondendo a aproximadamente **9
 
 ## 4. Matriz de Confusão
 
-A matriz de confusão permite analisar diretamente os acertos e os erros cometidos pelo modelo em cada classe.
+A matriz de confusão permite analisar diretamente os acertos e os erros cometidos pelo modelo em cada classe. A partir dela derivam-se os quatro valores usados nas fórmulas das métricas apresentadas nas seções seguintes:
+
+- **VP (Verdadeiro Positivo):** amostras da classe positiva corretamente classificadas;
+- **VN (Verdadeiro Negativo):** amostras da classe negativa corretamente classificadas;
+- **FP (Falso Positivo):** amostras da classe negativa classificadas incorretamente como positivas;
+- **FN (Falso Negativo):** amostras da classe positiva classificadas incorretamente como negativas.
 
 ![Matriz de Confusão — Random Forest](../../media/rf_confusion_matrix.png)
 
@@ -114,7 +119,15 @@ Essa proximidade indica que os erros do modelo não estão fortemente concentrad
 
 ## 5. Precision
 
-A *precision* indica, entre as amostras classificadas pelo modelo como pertencentes a uma determinada classe, quantas de fato pertenciam a essa classe. Os resultados obtidos foram:
+A *precision* indica, entre as amostras classificadas pelo modelo como pertencentes a uma determinada classe, quantas de fato pertenciam a essa classe. É calculada, para cada classe, por:
+
+$$Precision = \frac{VP}{VP + FP}$$
+
+Já a *precision macro*, que resume o desempenho do modelo entre as $C$ classes com peso igual para cada uma, é dada pela média aritmética simples das precisions individuais:
+
+$$Precision_{macro} = \frac{1}{C}\sum_{i=1}^{C} Precision_i$$
+
+Os resultados obtidos foram:
 
 | Classe               |  Precision |
 | --------------------- | ---------: |
@@ -128,7 +141,15 @@ O modelo apresentou boa capacidade de realizar classificações positivas corret
 
 ## 6. Recall
 
-O *recall* mede a capacidade do modelo de identificar corretamente as amostras que de fato pertencem a uma determinada classe. Os resultados obtidos foram:
+O *recall* mede a capacidade do modelo de identificar corretamente as amostras que de fato pertencem a uma determinada classe. É calculado, para cada classe, por:
+
+$$Recall = \frac{VP}{VP + FN}$$
+
+Da mesma forma, o *recall macro* é a média aritmética simples dos recalls individuais das $C$ classes:
+
+$$Recall_{macro} = \frac{1}{C}\sum_{i=1}^{C} Recall_i$$
+
+Os resultados obtidos foram:
 
 | Classe             |     Recall |
 | ------------------- | ---------: |
@@ -142,7 +163,15 @@ O *recall* de **0,89** para a classe 0 indica que aproximadamente 89% das amostr
 
 ## 7. F1-score
 
-O **F1-score** combina *precision* e *recall* em uma única métrica, sendo particularmente útil quando há interesse em equilibrar os dois aspectos de desempenho. Os resultados obtidos foram:
+O **F1-score** combina *precision* e *recall* em uma única métrica, por meio da média harmônica entre os dois, sendo particularmente útil quando há interesse em equilibrar ambos os aspectos de desempenho:
+
+$$F1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}$$
+
+O **F1 macro** é obtido calculando o F1-score de cada classe individualmente e, em seguida, tirando a média aritmética simples entre as $C$ classes:
+
+$$F1_{macro} = \frac{1}{C}\sum_{i=1}^{C} F1_i$$
+
+Os resultados obtidos foram:
 
 | Classe         |   F1-score |
 | --------------- | ---------: |
@@ -155,6 +184,10 @@ Os valores de F1-score de **0,90** para a classe 0 e **0,94** para a classe 1 de
 ---
 
 ## 8. Accuracy
+
+A *accuracy* (acurácia) representa a proporção de previsões corretas — considerando todas as classes conjuntamente — em relação ao total de amostras avaliadas:
+
+$$Accuracy = \frac{VP + VN}{VP + VN + FP + FN}$$
 
 A acurácia obtida no conjunto de teste foi:
 
@@ -317,5 +350,4 @@ O **Random Forest** demonstrou desempenho consistente e equilibrado na classific
 A matriz de confusão confirma esse comportamento, uma vez que os erros de classificação foram relativamente equilibrados entre as duas classes. A utilização de `balanced_subsample` mostrou-se adequada ao cenário de desbalanceamento, enquanto **200 árvores** proporcionaram o melhor compromisso entre desempenho e custo computacional.
 
 Em conjunto, os resultados obtidos indicam que o modelo possui boa capacidade de generalização e apresenta-se como uma abordagem adequada para o problema de classificação investigado.
-
 
