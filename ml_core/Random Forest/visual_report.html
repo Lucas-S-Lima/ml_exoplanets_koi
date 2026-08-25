@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Forest — Classificação de Exoplanetas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg-deep:#0a0e1a;
+    --bg-card:#131a2b;
+    --bg-card-alt:#1a2238;
+    --text-primary:#f2efe6;
+    --text-muted:#8d96ad;
+    --gold:#f4b942;
+    --coral:#ff6f61;
+    --teal:#5eead4;
+    --grid-line:#28324c;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg-deep);
+    color:var(--text-primary);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      radial-gradient(1px 1px at 20px 30px, #ffffff22, transparent),
+      radial-gradient(1px 1px at 140px 90px, #ffffff1a, transparent),
+      radial-gradient(1.5px 1.5px at 300px 40px, #ffffff22, transparent),
+      radial-gradient(1px 1px at 400px 180px, #ffffff15, transparent),
+      radial-gradient(1px 1px at 520px 260px, #ffffff1f, transparent),
+      radial-gradient(1.5px 1.5px at 70px 220px, #ffffff18, transparent);
+    background-repeat:repeat;
+    background-size:600px 400px;
+  }
+  .wrap{max-width:880px; margin:0 auto; padding:0 24px 100px;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:90px 0 50px;
+    text-align:center;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12.5px;
+    letter-spacing:2.5px;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:18px;
+  }
+  h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:clamp(32px,5vw,52px);
+    letter-spacing:-0.5px;
+    color:var(--text-primary);
+    max-width:680px;
+    margin:0 auto 16px;
+  }
+  .hero p.sub{
+    color:var(--text-muted);
+    font-size:16.5px;
+    max-width:520px;
+    margin:0 auto;
+  }
+
+  /* transit light-curve divider (signature element) */
+  .transit{
+    width:100%;
+    height:64px;
+    margin:36px 0;
+  }
+
+  .headline-number{
+    margin-top:46px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .headline-number .num{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:clamp(64px,12vw,108px);
+    color:var(--gold);
+    line-height:1;
+    letter-spacing:-2px;
+  }
+  .headline-number .lbl{
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    color:var(--text-muted);
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    margin-top:10px;
+  }
+
+  /* ---------- SECTION HEADERS ---------- */
+  section{margin-top:70px;}
+  .sec-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin-bottom:28px;
+  }
+  .sec-num{
+    font-family:'JetBrains Mono',monospace;
+    color:var(--gold);
+    font-size:14px;
+  }
+  .sec-title{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:24px;
+  }
+  .sec-lede{
+    color:var(--text-muted);
+    font-size:15px;
+    max-width:640px;
+    margin:-16px 0 28px;
+  }
+
+  /* ---------- METRIC CARDS ---------- */
+  .metric-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+  }
+  .metric-card{
+    background:var(--bg-card);
+    border:1px solid var(--grid-line);
+    border-radius:10px;
+    padding:20px 16px;
+    text-align:center;
+  }
+  .metric-card .val{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:28px;
+    color:var(--teal);
+  }
+  .metric-card.accent .val{color:var(--gold);}
+  .metric-card .lbl{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--text-muted);
+    letter-spacing:0.5px;
+    margin-top:6px;
+    text-transform:uppercase;
+  }
+
+  /* ---------- CONFUSION MATRIX ---------- */
+  .cm-wrap{
+    display:flex;
+    gap:36px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+  .cm-grid{
+    display:grid;
+    grid-template-columns:90px 130px 130px;
+    grid-template-rows:34px 100px 100px;
+    gap:6px;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .cm-cell{
+    border-radius:8px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+  }
+  .cm-axis{color:var(--text-muted); font-size:11px; text-align:center; display:flex; align-items:center; justify-content:center;}
+  .cm-real{
+    writing-mode:vertical-rl;
+    transform:rotate(180deg);
+    color:var(--text-muted);
+    font-size:11px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .cm-count{font-size:26px; font-weight:600; font-family:'Space Grotesk',sans-serif;}
+  .cm-hit{background:rgba(94,234,212,0.14); border:1px solid rgba(94,234,212,0.4); color:var(--teal);}
+  .cm-miss{background:rgba(255,111,97,0.12); border:1px solid rgba(255,111,97,0.35); color:var(--coral);}
+  .cm-legend{font-size:13.5px; color:var(--text-muted); max-width:260px;}
+  .cm-legend .dot{display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:8px;}
+
+  /* ---------- CHART CARD ---------- */
+  .chart-card{
+    background:var(--bg-card);
+    border:1px solid var(--grid-line);
+    border-radius:12px;
+    padding:24px;
+  }
+  .chart-card canvas{max-height:280px;}
+
+  /* ---------- FORMULA CARDS ---------- */
+  .formula-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+  }
+  .formula-card{
+    background:var(--bg-card-alt);
+    border:1px solid var(--grid-line);
+    border-radius:10px;
+    padding:20px 22px;
+  }
+  .formula-card h4{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:15px;
+    font-weight:600;
+    margin-bottom:10px;
+    color:var(--text-primary);
+  }
+  .formula-card p{color:var(--text-muted); font-size:13.5px; margin-top:10px;}
+  .frac-eq{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:15px;
+    flex-wrap:wrap;
+  }
+  .frac{
+    display:inline-flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+  .frac .n{padding:0 6px 3px; border-bottom:1.5px solid var(--text-primary);}
+  .frac .d{padding:3px 6px 0;}
+  .eq-sign{color:var(--gold);}
+
+  /* ---------- HYPERPARAM TABLE ---------- */
+  table.hp{
+    width:100%;
+    border-collapse:collapse;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13.5px;
+  }
+  table.hp th, table.hp td{
+    text-align:left;
+    padding:11px 14px;
+    border-bottom:1px solid var(--grid-line);
+  }
+  table.hp th{color:var(--text-muted); font-weight:500; font-size:11.5px; text-transform:uppercase; letter-spacing:0.5px;}
+  table.hp td.v{color:var(--gold);}
+
+  /* ---------- CALLOUT ---------- */
+  .callout{
+    background:linear-gradient(135deg, rgba(244,185,66,0.09), rgba(94,234,212,0.05));
+    border:1px solid rgba(244,185,66,0.25);
+    border-radius:12px;
+    padding:22px 24px;
+    font-size:14.5px;
+    color:var(--text-primary);
+  }
+  .callout b{color:var(--gold);}
+
+  /* ---------- CLASS DIST ---------- */
+  .dist-bar{
+    height:36px;
+    border-radius:8px;
+    overflow:hidden;
+    display:flex;
+    border:1px solid var(--grid-line);
+  }
+  .dist-seg{display:flex; align-items:center; justify-content:center; font-family:'JetBrains Mono',monospace; font-size:12.5px; font-weight:600;}
+  .dist-labels{display:flex; justify-content:space-between; margin-top:10px; font-size:12.5px; color:var(--text-muted); font-family:'JetBrains Mono',monospace;}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    margin-top:90px;
+    padding-top:28px;
+    border-top:1px solid var(--grid-line);
+    color:var(--text-muted);
+    font-size:12.5px;
+    font-family:'JetBrains Mono',monospace;
+    text-align:center;
+  }
+
+  @media (max-width:640px){
+    .metric-grid{grid-template-columns:repeat(2,1fr);}
+    .formula-row{grid-template-columns:1fr;}
+    .cm-wrap{flex-direction:column; align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">Relatório de Resultados · Modelo Preditivo</div>
+    <h1>Random Forest para Classificação de Exoplanetas</h1>
+    <p class="sub">Distinguindo candidatos confirmados de falsos positivos no catálogo Kepler, com base em 216 combinações de hiperparâmetros testadas via Grid Search.</p>
+
+    <svg class="transit" viewBox="0 0 880 64" preserveAspectRatio="none">
+      <line x1="0" y1="32" x2="330" y2="32" stroke="#28324c" stroke-width="1.5"/>
+      <path d="M 330 32 C 345 32, 350 50, 365 50 L 515 50 C 530 50, 535 32, 550 32" fill="none" stroke="#f4b942" stroke-width="1.5"/>
+      <line x1="550" y1="32" x2="880" y2="32" stroke="#28324c" stroke-width="1.5"/>
+    </svg>
+
+    <div class="headline-number">
+      <div class="num">92,46%</div>
+      <div class="lbl">Acurácia no conjunto de teste</div>
+    </div>
+  </div>
+
+  <!-- 01 -->
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><span class="sec-title">Visão geral das métricas</span></div>
+    <p class="sec-lede">Resultados médios obtidos na validação cruzada estratificada (5 folds) com a melhor combinação de hiperparâmetros.</p>
+    <div class="metric-grid">
+      <div class="metric-card accent"><div class="val">92,46%</div><div class="lbl">Accuracy</div></div>
+      <div class="metric-card"><div class="val">91,74%</div><div class="lbl">Precision macro</div></div>
+      <div class="metric-card"><div class="val">92,02%</div><div class="lbl">Recall macro</div></div>
+      <div class="metric-card"><div class="val">91,87%</div><div class="lbl">F1 macro</div></div>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><span class="sec-title">Matriz de confusão</span></div>
+    <p class="sec-lede">1.897 amostras de teste — 1.754 classificadas corretamente, 143 erros, distribuídos de forma equilibrada entre as duas classes.</p>
+    <div class="cm-wrap">
+      <div class="cm-grid">
+        <div></div>
+        <div class="cm-axis">Predito: 0</div>
+        <div class="cm-axis">Predito: 1</div>
+
+        <div class="cm-real">Real: 0</div>
+        <div class="cm-cell cm-hit"><span class="cm-count">613</span>acertos</div>
+        <div class="cm-cell cm-miss"><span class="cm-count">74</span>erros</div>
+
+        <div class="cm-real">Real: 1</div>
+        <div class="cm-cell cm-miss"><span class="cm-count">69</span>erros</div>
+        <div class="cm-cell cm-hit"><span class="cm-count">1.141</span>acertos</div>
+      </div>
+      <div class="cm-legend">
+        <p style="margin-bottom:10px;"><span class="dot" style="background:var(--teal);"></span>Classificações corretas — 1.754 no total</p>
+        <p><span class="dot" style="background:var(--coral);"></span>Classificações incorretas — 143 no total, quase igualmente divididas entre as duas classes (74 vs 69)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><span class="sec-title">Desempenho por classe</span></div>
+    <p class="sec-lede">Precision, recall e F1-score comparados entre a Classe 0 (687 amostras) e a Classe 1 (1.210 amostras).</p>
+    <div class="chart-card">
+      <canvas id="perClassChart"></canvas>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><span class="sec-title">Como cada métrica é calculada</span></div>
+    <p class="sec-lede">VP/VN/FP/FN vêm diretamente da matriz de confusão acima. As versões "macro" são a média simples entre as duas classes, dando peso igual a cada uma — importante porque a Classe 1 tem quase o dobro de amostras da Classe 0.</p>
+    <div class="formula-row">
+      <div class="formula-card">
+        <h4>Precision</h4>
+        <div class="frac-eq">Precision <span class="eq-sign">=</span>
+          <span class="frac"><span class="n">VP</span><span class="d">VP + FP</span></span>
+        </div>
+        <p>Das amostras que o modelo apontou como positivas, quantas realmente eram.</p>
+      </div>
+      <div class="formula-card">
+        <h4>Recall</h4>
+        <div class="frac-eq">Recall <span class="eq-sign">=</span>
+          <span class="frac"><span class="n">VP</span><span class="d">VP + FN</span></span>
+        </div>
+        <p>Das amostras realmente positivas, quantas o modelo encontrou.</p>
+      </div>
+      <div class="formula-card">
+        <h4>F1-score</h4>
+        <div class="frac-eq">F1 <span class="eq-sign">=</span> 2 ×
+          <span class="frac"><span class="n">Prec × Rec</span><span class="d">Prec + Rec</span></span>
+        </div>
+        <p>Média harmônica entre precision e recall — equilibra os dois.</p>
+      </div>
+      <div class="formula-card">
+        <h4>Accuracy</h4>
+        <div class="frac-eq">Acc <span class="eq-sign">=</span>
+          <span class="frac"><span class="n">VP + VN</span><span class="d">Total</span></span>
+        </div>
+        <p>Proporção geral de acertos, sem distinguir entre classes.</p>
+      </div>
+    </div>
+    <p style="margin-top:18px; color:var(--text-muted); font-size:13.5px; font-family:'JetBrains Mono',monospace;">Macro = (métrica classe 0 + métrica classe 1) / 2</p>
+  </section>
+
+  <!-- 05 -->
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><span class="sec-title">Configuração do modelo</span></div>
+    <p class="sec-lede">Hiperparâmetros selecionados pelo Grid Search entre 216 combinações testadas.</p>
+    <table class="hp">
+      <tr><th>Hiperparâmetro</th><th>Valor</th></tr>
+      <tr><td>n_estimators</td><td class="v">200</td></tr>
+      <tr><td>criterion</td><td class="v">entropy</td></tr>
+      <tr><td>class_weight</td><td class="v">balanced_subsample</td></tr>
+      <tr><td>max_depth</td><td class="v">30</td></tr>
+      <tr><td>min_samples_leaf</td><td class="v">1</td></tr>
+      <tr><td>max_features</td><td class="v">sqrt</td></tr>
+      <tr><td>random_state</td><td class="v">42</td></tr>
+    </table>
+  </section>
+
+  <!-- 06 -->
+  <section>
+    <div class="sec-head"><span class="sec-num">06</span><span class="sec-title">Número de árvores: 150 vs. 200 vs. 300</span></div>
+    <p class="sec-lede">200 árvores atingiram o melhor F1 macro — a diferença para 300 árvores foi de apenas ~0,00005, não justificando o custo computacional extra.</p>
+    <div class="chart-card">
+      <canvas id="treesChart"></canvas>
+    </div>
+    <div class="callout" style="margin-top:18px;">
+      A estimativa <b>Out-of-Bag</b> apontava ~300 árvores como ideal, enquanto o Grid Search com validação cruzada selecionou <b>200</b>. Não há contradição: são métodos distintos de estimar o ponto ótimo, e a diferença de desempenho entre eles é praticamente desprezível.
+    </div>
+  </section>
+
+  <!-- 07 -->
+  <section>
+    <div class="sec-head"><span class="sec-num">07</span><span class="sec-title">Distribuição das classes no teste</span></div>
+    <p class="sec-lede">O desbalanceamento entre classes é o motivo pelo qual as métricas "macro" (e não só a accuracy) guiaram a escolha do modelo.</p>
+    <div class="dist-bar">
+      <div class="dist-seg" style="width:36.22%; background:rgba(255,111,97,0.35); color:var(--coral);">36,22%</div>
+      <div class="dist-seg" style="width:63.78%; background:rgba(94,234,212,0.3); color:var(--teal);">63,78%</div>
+    </div>
+    <div class="dist-labels">
+      <span>Classe 0 — 687 amostras</span>
+      <span>Classe 1 — 1.210 amostras</span>
+    </div>
+  </section>
+
+  <!-- 08 -->
+  <section>
+    <div class="sec-head"><span class="sec-num">08</span><span class="sec-title">Conclusão</span></div>
+    <p style="color:var(--text-muted); font-size:15px; max-width:680px;">
+      O Random Forest apresentou desempenho consistente e equilibrado entre as duas classes, com <b style="color:var(--text-primary);">92,46% de acurácia</b> e <b style="color:var(--text-primary);">F1 macro ≈ 0,92</b>. Os erros de classificação (143 no total) ficaram distribuídos quase igualmente entre as classes — 74 falsos positivos e 69 falsos negativos — indicando que o modelo não depende exclusivamente da classe majoritária para atingir seu desempenho. A proximidade entre os resultados de validação cruzada e teste sugere boa capacidade de generalização.
+    </p>
+  </section>
+
+  <footer>Random Forest Classifier · scikit-learn · Grid Search com 5-fold CV · 216 combinações avaliadas</footer>
+</div>
+
+<script>
+  const gridColor = '#28324c';
+  const textColor = '#8d96ad';
+  Chart.defaults.font.family = "'Inter', sans-serif";
+  Chart.defaults.color = textColor;
+
+  new Chart(document.getElementById('perClassChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Precision', 'Recall', 'F1-score'],
+      datasets: [
+        { label: 'Classe 0', data: [0.90, 0.89, 0.90], backgroundColor: '#ff6f61', borderRadius: 6, barPercentage: 0.6 },
+        { label: 'Classe 1', data: [0.94, 0.94, 0.94], backgroundColor: '#5eead4', borderRadius: 6, barPercentage: 0.6 }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top', labels: { boxWidth: 12, padding: 18 } } },
+      scales: {
+        y: { min: 0, max: 1, grid: { color: gridColor }, ticks: { callback: v => (v*100)+'%' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  new Chart(document.getElementById('treesChart'), {
+    type: 'line',
+    data: {
+      labels: ['150 árvores', '200 árvores', '300 árvores'],
+      datasets: [{
+        label: 'Melhor F1 macro',
+        data: [0.916790, 0.918670, 0.918622],
+        borderColor: '#f4b942',
+        backgroundColor: 'rgba(244,185,66,0.15)',
+        pointBackgroundColor: '#f4b942',
+        pointRadius: 6,
+        tension: 0.35,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { min: 0.913, max: 0.920, grid: { color: gridColor }, ticks: { callback: v => v.toFixed(4) } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+</script>
+</body>
+</html>
