@@ -247,6 +247,10 @@ Observa-se que o aumento do número de árvores produz apenas alterações margi
 
 Esse resultado também explica por que o número ideal de árvores observado anteriormente pela análise *Out-of-Bag* (OOB) foi de aproximadamente 300, enquanto a validação cruzada selecionou 200. A estimativa OOB e a validação cruzada são procedimentos distintos e podem produzir pontos ótimos ligeiramente diferentes. Não há, portanto, contradição entre os resultados:
 
+![Out of bag estimators — Random Forest](../../media/oob_errors.png)
+
+**Figura 1** — Matriz de confusão do modelo Random Forest no conjunto de teste.
+
 - **OOB:** indicou aproximadamente 300 árvores;
 - **Grid Search + validação cruzada:** selecionou 200 árvores;
 - **Diferença de desempenho entre 200 e 300 árvores:** praticamente desprezível.
