@@ -97,7 +97,9 @@ A matriz de confusão permite analisar diretamente os acertos e os erros cometid
 - **FP (Falso Positivo):** amostras da classe negativa classificadas incorretamente como positivas;
 - **FN (Falso Negativo):** amostras da classe positiva classificadas incorretamente como negativas.
 
-![Matriz de Confusão — Regressão Logística](../../media/lr_confusion_matrix.png)
+![Matriz de Confusão — Regressão Logística](matriz_confusao.png)
+
+/home/lucaslima/Área de trabalho/Projetos/ml_exoplanets_tg/ml_exoplanets/ml_core/Logistic Regression/matriz_confusao.png
 
 **Figura 1** — Matriz de confusão do modelo de Regressão Logística no conjunto de teste (dados com log-transform).
 
