@@ -13,7 +13,7 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, classifica
 # Mesmo padrão usado no script de GridSearchCV
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
-pkl_path = ROOT_DIR / "exoplanets.pkl"
+pkl_path = ROOT_DIR / "exoplanets_split.pkl"
 
 print("\n" + "=" * 60)
 print("CARREGAMENTO DOS DADOS")

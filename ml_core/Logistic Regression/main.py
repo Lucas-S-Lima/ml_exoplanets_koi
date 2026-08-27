@@ -3,11 +3,12 @@ import pandas as pd
 import joblib
 from pathlib import Path
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report
 
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 
-pkl_path = ROOT_DIR / "exoplanets.pkl"
+pkl_path = ROOT_DIR / "exoplanets_split.pkl"
 
 data = joblib.load(pkl_path)
 
@@ -35,3 +36,7 @@ print("Coefficients:", logistic_regression.coef_)
 predictions = logistic_regression.predict(x_koi_test)
 print("Predictions:", predictions)
 print("Test accuracy:", logistic_regression.score(x_koi_test, y_koi_test))
+
+print("Metrics:")
+print("Accuracy:", accuracy_score(y_koi_test, predictions))
+print("Classification Report:\n", classification_report(y_koi_test, predictions))

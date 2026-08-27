@@ -16,7 +16,7 @@ from sklearn.metrics import (
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 
-pkl_path = ROOT_DIR / "exoplanets.pkl"
+pkl_path = ROOT_DIR / "exoplanets_split.pkl"
 
 data = joblib.load(pkl_path)
 

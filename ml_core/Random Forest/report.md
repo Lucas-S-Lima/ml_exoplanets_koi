@@ -70,10 +70,10 @@ Os resultados obtidos no conjunto de teste foram:
 | **0**               |      0,90 |     0,89 |     0,90 |       687 |
 | **1**               |      0,94 |     0,94 |     0,94 |     1.210 |
 | **Macro avg**       |  **0,92** | **0,92** | **0,92** |     1.897 |
-| **Weighted avg**    |  **0,92** | **0,92** | **0,92** |     1.897 |
-| **Accuracy**        |           |          | **0,92** | **1.897** |
+| **Weighted avg**    |  **0,93** | **0,93** | **0,93** |     1.897 |
+| **Accuracy**        |           |          | **0,93** | **1.897** |
 
-A acurácia final obtida foi de **0,9246**, correspondendo a aproximadamente **92,46%** de classificações corretas.
+A acurácia final obtida foi de **0,9257**, correspondendo a aproximadamente **92,57%** de classificações corretas.
 
 ---
 
@@ -94,24 +94,24 @@ A matriz obtida foi:
 
 |              | Predito: 0 | Predito: 1 |
 | ------------- | ---------: | ---------: |
-| **Real: 0**    |    **613** |     **74** |
-| **Real: 1**    |     **69** |  **1.141** |
+| **Real: 0**    |    **614** |     **73** |
+| **Real: 1**    |     **68** |  **1.142** |
 
 A interpretação dos valores é a seguinte:
 
-- **613** amostras da classe 0 foram corretamente classificadas como classe 0;
-- **74** amostras da classe 0 foram incorretamente classificadas como classe 1;
-- **69** amostras da classe 1 foram incorretamente classificadas como classe 0;
-- **1.141** amostras da classe 1 foram corretamente classificadas como classe 1.
+- **614** amostras da classe 0 foram corretamente classificadas como classe 0;
+- **73** amostras da classe 0 foram incorretamente classificadas como classe 1;
+- **68** amostras da classe 1 foram incorretamente classificadas como classe 0;
+- **1.142** amostras da classe 1 foram corretamente classificadas como classe 1.
 
-O modelo classificou corretamente **1.754** amostras de um total de **1.897**, resultando em uma acurácia de **92,46%**.
+O modelo classificou corretamente **1.756** amostras de um total de **1.897**, resultando em uma acurácia de **92,57%**.
 
-O total de erros foi de **143 amostras**, correspondendo a aproximadamente **7,54%** do conjunto de teste. Um aspecto positivo observado é que a quantidade de erros entre as classes é bastante semelhante:
+O total de erros foi de **141 amostras**, correspondendo a aproximadamente **7,43%** do conjunto de teste. Um aspecto positivo observado é que a quantidade de erros entre as classes é bastante semelhante:
 
 | Tipo de Erro          | Quantidade |
 | ---------------------- | ---------: |
-| Classe 0 → Classe 1     |     **74** |
-| Classe 1 → Classe 0     |     **69** |
+| Classe 0 → Classe 1     |     **73** |
+| Classe 1 → Classe 0     |     **68** |
 
 Essa proximidade indica que os erros do modelo não estão fortemente concentrados em uma única classe.
 
@@ -191,9 +191,9 @@ $$Accuracy = \frac{VP + VN}{VP + VN + FP + FN}$$
 
 A acurácia obtida no conjunto de teste foi:
 
-**Accuracy = 0,9246**
+**Accuracy = 0,9257**
 
-Ou seja, aproximadamente **92,46%** das amostras foram classificadas corretamente. Embora se trate de uma métrica relevante, a acurácia não deve ser utilizada isoladamente neste experimento, uma vez que o conjunto de dados apresenta distribuição desigual entre as classes:
+Ou seja, aproximadamente **92,57%** das amostras foram classificadas corretamente. Embora se trate de uma métrica relevante, a acurácia não deve ser utilizada isoladamente neste experimento, uma vez que o conjunto de dados apresenta distribuição desigual entre as classes:
 
 | Classe    |  Amostras | Proporção |
 | ---------- | --------: | --------: |
@@ -222,7 +222,7 @@ Uma característica relevante dos resultados é a proximidade entre o desempenho
 
 | Métrica           |  Resultado |
 | ------------------- | ---------: |
-| Accuracy             | **0,9246** |
+| Accuracy             | **0,9257** |
 | Precision macro      |     ≈ 0,92 |
 | Recall macro         |     ≈ 0,92 |
 | **F1 macro**         | **≈ 0,92** |
@@ -279,23 +279,23 @@ A matriz de confusão permite observar a seguinte distribuição de resultados:
 
 | Tipo de Resultado                    | Quantidade |
 | -------------------------------------- | ---------: |
-| Classe 0 corretamente classificada       |    **613** |
-| Classe 0 classificada como 1             |     **74** |
-| Classe 1 classificada como 0             |     **69** |
-| Classe 1 corretamente classificada       |  **1.141** |
-| **Total de acertos**                     |  **1.754** |
-| **Total de erros**                       |    **143** |
+| Classe 0 corretamente classificada       |    **614** |
+| Classe 0 classificada como 1             |     **73** |
+| Classe 1 classificada como 0             |     **68** |
+| Classe 1 corretamente classificada       |  **1.142** |
+| **Total de acertos**                     |  **1.756** |
+| **Total de erros**                       |    **141** |
 
 Os erros de classificação representam:
 
-$$\frac{143}{1.897} \times 100 \approx 7,54\%$$
+$$\frac{141}{1.897} \times 100 \approx 7,43\%$$
 
 do conjunto de teste. Um aspecto positivo é que a quantidade de erros entre as classes é bastante semelhante:
 
 | Classe Real | Erros  |
 | ------------ | -----: |
-| Classe 0      | **74** |
-| Classe 1      | **69** |
+| Classe 0      | **73** |
+| Classe 1      | **68** |
 
 Esse comportamento reforça a indicação de que o modelo não está simplesmente favorecendo a classe majoritária.
 
@@ -303,13 +303,13 @@ Esse comportamento reforça a indicação de que o modelo não está simplesment
 
 ## 13. Principais Conclusões
 
-Os resultados obtidos permitem concluir que o Random Forest apresentou desempenho elevado na tarefa de classificação, alcançando aproximadamente **92,46%** de acurácia no conjunto de teste e **F1 macro próximo de 0,92**.
+Os resultados obtidos permitem concluir que o Random Forest apresentou desempenho elevado na tarefa de classificação, alcançando aproximadamente **92,57%** de acurácia no conjunto de teste e **F1 macro próximo de 0,92**.
 
 O desempenho individual das classes também foi satisfatório: a classe 0 apresentou *precision* de 0,90, *recall* de 0,89 e F1-score de 0,90, enquanto a classe 1 apresentou *precision* de 0,94, *recall* de 0,94 e F1-score de 0,94.
 
 A diferença entre as métricas das classes demonstra que a classe 0 é ligeiramente mais difícil de classificar. Entretanto, essa diferença não é suficientemente grande para indicar um comportamento fortemente enviesado em favor da classe majoritária.
 
-A matriz de confusão reforça essa conclusão: foram observadas 74 classificações incorretas da classe 0 como classe 1 e 69 classificações incorretas da classe 1 como classe 0, evidenciando erros relativamente equilibrados entre as classes.
+A matriz de confusão reforça essa conclusão: foram observadas 73 classificações incorretas da classe 0 como classe 1 e 68 classificações incorretas da classe 1 como classe 0, evidenciando erros relativamente equilibrados entre as classes.
 
 O F1 macro de aproximadamente **0,92** constitui uma das principais evidências do bom desempenho do modelo, por atribuir peso igual às duas classes. A *precision* macro e o *recall* macro, também próximos de 0,92, reforçam a indicação de equilíbrio entre a capacidade de evitar classificações incorretas e a capacidade de identificar corretamente as amostras de cada classe.
 
@@ -325,7 +325,7 @@ Por fim, a proximidade entre os resultados da validação cruzada e do conjunto 
 
 | Indicador                     |              Resultado |
 | ------------------------------- | ----------------------: |
-| **Accuracy no teste**            |              **92,46%** |
+| **Accuracy no teste**            |              **92,57%** |
 | **F1 macro — CV**                |              **91,87%** |
 | F1 classe 0                      |                     90% |
 | F1 classe 1                      |                     94% |
@@ -340,18 +340,17 @@ Por fim, a proximidade entre os resultados da validação cruzada e do conjunto 
 | Balanceamento                     |  **Balanced Subsample** |
 | Profundidade máxima               |                  **30** |
 | Amostras no teste                 |               **1.897** |
-| Classificações corretas           |               **1.754** |
-| Classificações incorretas         |                 **143** |
-| Taxa de acerto                    |              **92,46%** |
-| Taxa de erro                      |               **7,54%** |
+| Classificações corretas           |               **1.756** |
+| Classificações incorretas         |                 **141** |
+| Taxa de acerto                    |              **92,57%** |
+| Taxa de erro                      |               **7,43%** |
 
 ---
 
 ## 15. Conclusão Geral
 
-O **Random Forest** demonstrou desempenho consistente e equilibrado na classificação das duas classes, alcançando acurácia de **92,46%** e F1 macro próximo de **0,92**. As métricas de *precision*, *recall* e F1-score por classe indicam que o modelo não depende exclusivamente da classe majoritária para obter seu desempenho, apresentando resultados satisfatórios também para a classe minoritária.
+O **Random Forest** demonstrou desempenho consistente e equilibrado na classificação das duas classes, alcançando acurácia de **92,57%** e F1 macro próximo de **0,92**. As métricas de *precision*, *recall* e F1-score por classe indicam que o modelo não depende exclusivamente da classe majoritária para obter seu desempenho, apresentando resultados satisfatórios também para a classe minoritária.
 
 A matriz de confusão confirma esse comportamento, uma vez que os erros de classificação foram relativamente equilibrados entre as duas classes. A utilização de `balanced_subsample` mostrou-se adequada ao cenário de desbalanceamento, enquanto **200 árvores** proporcionaram o melhor compromisso entre desempenho e custo computacional.
 
 Em conjunto, os resultados obtidos indicam que o modelo possui boa capacidade de generalização e apresenta-se como uma abordagem adequada para o problema de classificação investigado.
-
