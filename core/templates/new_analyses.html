@@ -1,0 +1,113 @@
+{% extends "layout.html" %}
+{% block title %}New Analysis — ExoClassify{% endblock %}
+{% block content %}
+<div class="p-6 overflow-y-auto">
+  <h2 class="text-xl font-bold text-white mb-6">New Analysis</h2>
+
+  <form method="post" class="bg-[#0a1628]/80 border border-[#1e3a5f] rounded-xl p-6 max-w-lg">
+    {% csrf_token %}
+
+    <div class="grid grid-cols-2 gap-4">
+
+      <!-- Planetary Radius -->
+      <div>
+        <label class="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Planetary Radius</label>
+        <div class="relative">
+          <input type="number" step="any" name="planetary_radius" placeholder="0.0"
+                 class="w-full bg-[#0d1b35] border border-[#1e3a5f] rounded-md px-3 py-2 pr-10 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-colors">
+          <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500">mm</span>
+        </div>
+      </div>
+
+      <!-- Orbital Period -->
+      <div>
+        <label class="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Orbital Period ©</label>
+        <input type="number" step="any" name="orbital_period" placeholder="0"
+               class="w-full bg-[#0d1b35] border border-[#1e3a5f] rounded-md px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-colors">
+      </div>
+
+      <!-- Planet ID -->
+      <div>
+        <label class="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Planet ID</label>
+        <input type="text" name="planet_id" placeholder="XYZ-78b" value="XYZ-78b"
+               class="w-full bg-[#0d1b35] border border-[#1e3a5f] rounded-md px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-colors">
+      </div>
+
+      <!-- Orr Temperature -->
+      <div>
+        <label class="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Orr Temperature</label>
+        <select name="orr_temperature" class="w-full bg-[#0d1b35] border border-[#1e3a5f] rounded-md px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500 transition-colors appearance-none cursor-pointer">
+          <option>Stellar</option>
+          <option>Hot</option>
+          <option>Warm</option>
+          <option>Cold</option>
+        </select>
+      </div>
+
+      <!-- Star Temperature -->
+      <div>
+        <label class="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Star Temperature</label>
+        <input type="text" name="star_temperature" value="350K"
+               class="w-full bg-[#0d1b35] border border-[#1e3a5f] rounded-md px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-colors">
+      </div>
+
+      <!-- Star Mass -->
+      <div>
+        <label class="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Star Mass</label>
+        <div class="relative">
+          <input type="number" step="any" name="star_mass" value="1500"
+                 class="w-full bg-[#0d1b35] border border-[#1e3a5f] rounded-md px-3 py-2 pr-12 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-colors">
+          <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500">karth</span>
+        </div>
+      </div>
+
+      <!-- Flux -->
+      <div>
+        <label class="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Flux</label>
+        <select name="flux" class="w-full bg-[#0d1b35] border border-[#1e3a5f] rounded-md px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500 transition-colors appearance-none cursor-pointer">
+          <option>Strongover</option>
+          <option>Medium</option>
+          <option>Weak</option>
+        </select>
+      </div>
+
+      <!-- Surface Temperature -->
+      <div>
+        <label class="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Surface Temperature</label>
+        <input type="text" name="surface_temperature" value="TK"
+               class="w-full bg-[#0d1b35] border border-[#1e3a5f] rounded-md px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-colors">
+      </div>
+
+      <!-- Star Distance -->
+      <div>
+        <label class="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Star Distance</label>
+        <div class="relative">
+          <input type="number" step="any" name="star_distance" value="200"
+                 class="w-full bg-[#0d1b35] border border-[#1e3a5f] rounded-md px-3 py-2 pr-10 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-colors">
+          <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500">ksh</span>
+        </div>
+      </div>
+
+      <!-- Stellar Flux -->
+      <div>
+        <label class="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Stellar Flux</label>
+        <input type="number" step="any" name="stellar_flux" value="1.8"
+               class="w-full bg-[#0d1b35] border border-[#1e3a5f] rounded-md px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-colors">
+      </div>
+
+    </div>
+
+    <div class="flex gap-3 mt-6">
+      <button type="submit"
+              class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold rounded-md tracking-wider uppercase transition-colors">
+        Analisar
+      </button>
+      <a href="{% url 'home' %}"
+         class="px-4 py-2.5 border border-[#1e3a5f] text-slate-400 hover:text-slate-200 text-sm rounded-md transition-colors">
+        Voltar à Home
+      </a>
+    </div>
+
+  </form>
+</div>
+{% endblock %}

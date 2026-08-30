@@ -1,42 +1,83 @@
-{% load static %}
+{% extends "layout.html" %}
+{% block title %}Home — ExoClassify{% endblock %}
+{% block content %}
+<div class="p-6 space-y-6">
 
-<!DOCTYPE html>
+  <!-- Hero banner -->
+  <div class="rounded-xl overflow-hidden relative h-44 flex flex-col items-center justify-center"
+       style="background: radial-gradient(ellipse at 50% 60%, rgba(29,78,216,0.5) 0%, rgba(6,13,31,0.9) 70%), url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800&h=400&fit=crop&auto=format') center/cover;">
+    <h2 class="text-3xl font-black tracking-widest text-white font-orbitron" style="letter-spacing:0.25em">EXOCLASSIFY</h2>
+    <p class="text-xs text-blue-300 tracking-widest uppercase mt-1">Analysis and Classification of Exoplanets</p>
+  </div>
 
-<html lang="pt-BR">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Welcome card -->
+    <div class="bg-[#0a1628]/80 border border-[#1e3a5f] rounded-xl p-5">
+      <h3 class="text-sm font-semibold text-white mb-1">Welcome to {{ user_name }}</h3>
+      <p class="text-xs text-slate-400 mb-4">Welcome to Exoplanet Analysis and Classification System.</p>
 
-    <title>Exoplanet Classifier</title>
-
-    <link
-        rel="stylesheet"
-        href="{% static 'css/styles.css' %}"
-    >
-</head>
-
-<body>
-
-<!-- Header -->
-<header class="page-header">
-
-    <div class="page-header-container">
-
-        <div class="header-content">
-
-            <div class="head-image-planet">
-                <img src="{% static 'images/icons8-saturn-planet-96.png' %}" alt="Star">
-            </div>
-
-            <div>
-                <h1 class="head-title">
-                    Exolab
-                </h1>
-            </div>
-
-        </div>
-
+      <!-- Start new card -->
+      <div class="rounded-lg p-4 mb-0 cursor-pointer hover:brightness-110 transition-all"
+           style="background: linear-gradient(135deg, rgba(29,78,216,0.6) 0%, rgba(6,13,31,0.8) 100%), url('https://images.unsplash.com/photo-1614642264762-d0a3b8bf3700?w=400&h=200&fit=crop&auto=format') center/cover; background-blend-mode: multiply;">
+        <p class="text-xs text-blue-300 uppercase tracking-wider mb-1">Start New Analysis</p>
+        <p class="text-xs text-slate-300 mb-3">Start score ans nomenter you start.</p>
+        <a href="{% url 'new-analysis' %}" class="inline-block px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-md transition-colors">
+          Start New
+        </a>
+      </div>
     </div>
 
-</header>
+    <div class="space-y-4">
+
+      <!-- Stats -->
+      <div class="bg-[#0a1628]/80 border border-[#1e3a5f] rounded-xl p-5">
+        <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Your Stats</h3>
+        <div class="grid grid-cols-3 gap-3 text-center">
+          <div>
+            <p class="text-2xl font-bold text-blue-300">{{ total }}</p>
+            <p class="text-xs text-slate-500 mt-0.5">Analyses</p>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-emerald-400">{{ confirmed }}</p>
+            <p class="text-xs text-slate-500 mt-0.5">Confirmed</p>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-orange-400">{{ not_exo }}</p>
+            <p class="text-xs text-slate-500 mt-0.5">Not Exoplanets</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent activity -->
+      <div class="bg-[#0a1628]/80 border border-[#1e3a5f] rounded-xl p-5">
+        <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Recent Activity</h3>
+        {% if recent %}
+          <div class="space-y-3">
+            {% for a in recent %}
+            <div class="flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></div>
+              <div>
+                <p class="text-xs text-slate-300">{{ a.planet_id }} — {{ a.resultado_label }}</p>
+                <p class="text-xs text-slate-600">{{ a.date }}</p>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="space-y-3">
+            <div class="flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></div>
+              <div>
+                <p class="text-xs text-slate-300">Start New Analysis</p>
+                <p class="text-xs text-slate-600">Just now</p>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
