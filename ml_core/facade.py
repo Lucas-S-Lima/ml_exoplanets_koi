@@ -3,7 +3,7 @@ import joblib
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 
 DEFAULT_FILENAME = "exoplanets_split.pkl"
@@ -63,6 +63,11 @@ def get_logistic_regression_metrics(model, x_test, y_test) -> dict:
     }
 
 
+def get_logistic_regression_confusion_matrix(model, x_test, y_test):
+    predictions = logistic_regression_predict(model, x_test)
+    return confusion_matrix(y_test, predictions)
+
+
 def random_forest_model(
         x_train, y_train, 
         n_estimators=200, criterion="entropy", 
@@ -102,6 +107,11 @@ def get_random_forest_metrics(model, x_test, y_test) -> dict:
     }
 
 
+def get_random_forest_confusion_matrix(model, x_test, y_test):
+    predictions = random_forest_predict(model, x_test)
+    return confusion_matrix(y_test, predictions)
+
+
 def svm_model(x_train, y_train, 
               kernel="rbf", C=400, gamma=0.05, 
               class_weight=None, random_state=42):
@@ -131,3 +141,7 @@ def get_svm_metrics(model, x_test, y_test) -> dict:
         "accuracy": accuracy_score(y_test, predictions),
         "classification_report": classification_report(y_test, predictions),
     }
+
+def get_svm_confusion_matrix(model, x_test, y_test):
+    predictions = svm_predict(model, x_test)
+    return confusion_matrix(y_test, predictions)
