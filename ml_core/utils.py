@@ -10,18 +10,14 @@ DEFAULT_FILENAME = "exoplanets_split.pkl"
 ROOT_DIR = Path(__file__).resolve().parents[2]
 
 
-def get_pickle_filepath(
-        filename: str = DEFAULT_FILENAME, 
-        root_dir: Path | None = None) -> Path:
+def get_pickle_filepath(filename: str = DEFAULT_FILENAME, root_dir: Path | None = None) -> Path:
 
     root_dir = root_dir or ROOT_DIR
 
     return root_dir / filename
 
 
-def load_exoplanet_split(
-        filename: str = DEFAULT_FILENAME, 
-        root_dir: Path | None = None):
+def load_exoplanet_split(filename: str = DEFAULT_FILENAME, root_dir: Path | None = None):
 
     pickle_path = get_pickle_filepath(filename, root_dir)
     raw = joblib.load(pickle_path)
@@ -30,9 +26,8 @@ def load_exoplanet_split(
 
 
 def logistic_regression_model(
-        x_train, y_train, 
-        l1_ratio=0.0, C=3000, solver="lbfgs", 
-        max_iter=2000, random_state=42):
+    x_train, y_train, l1_ratio=0.0, C=3000, solver="lbfgs", max_iter=2000, random_state=42
+):
 
     model = LogisticRegression(
         l1_ratio=l1_ratio,
@@ -69,11 +64,17 @@ def get_logistic_regression_confusion_matrix(model, x_test, y_test):
 
 
 def random_forest_model(
-        x_train, y_train, 
-        n_estimators=200, criterion="entropy", 
-        class_weight="balanced_subsample", max_depth=30, 
-        min_samples_leaf=1, max_features="sqrt", 
-        random_state=42, n_jobs=-1):
+    x_train,
+    y_train,
+    n_estimators=200,
+    criterion="entropy",
+    class_weight="balanced_subsample",
+    max_depth=30,
+    min_samples_leaf=1,
+    max_features="sqrt",
+    random_state=42,
+    n_jobs=-1,
+):
 
     model = RandomForestClassifier(
         n_estimators=n_estimators,
@@ -83,7 +84,7 @@ def random_forest_model(
         min_samples_leaf=min_samples_leaf,
         max_features=max_features,
         random_state=random_state,
-        n_jobs=n_jobs
+        n_jobs=n_jobs,
     )
 
     model.fit(x_train, y_train)
@@ -112,16 +113,12 @@ def get_random_forest_confusion_matrix(model, x_test, y_test):
     return confusion_matrix(y_test, predictions)
 
 
-def svm_model(x_train, y_train, 
-              kernel="rbf", C=400, gamma=0.05, 
-              class_weight=None, random_state=42):
+def svm_model(
+    x_train, y_train, kernel="rbf", C=400, gamma=0.05, class_weight=None, random_state=42
+):
 
     model = SVC(
-        kernel=kernel,
-        C=C,
-        gamma=gamma,
-        class_weight=class_weight,
-        random_state=random_state
+        kernel=kernel, C=C, gamma=gamma, class_weight=class_weight, random_state=random_state
     )
 
     model.fit(x_train, y_train)
@@ -141,6 +138,7 @@ def get_svm_metrics(model, x_test, y_test) -> dict:
         "accuracy": accuracy_score(y_test, predictions),
         "classification_report": classification_report(y_test, predictions),
     }
+
 
 def get_svm_confusion_matrix(model, x_test, y_test):
     predictions = svm_predict(model, x_test)

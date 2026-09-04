@@ -43,14 +43,7 @@ def download_exoplanet_data(self):
     start_time = time.time()
 
     try:
-        response = session.get(
-            url,
-            params={
-                "query": query,
-                "format": "csv"
-            },
-            timeout=timeout
-        )
+        response = session.get(url, params={"query": query, "format": "csv"}, timeout=timeout)
 
         logger.info(f"Status HTTP: {response.status_code}")
         response.raise_for_status()
@@ -66,14 +59,14 @@ def download_exoplanet_data(self):
         logger.info("\nDataset carregado com sucesso!")
         logger.info(f"Shape: {df.shape}")
 
-        output_dir = os.path.join(settings.BASE_DIR, 'data')
+        output_dir = os.path.join(settings.BASE_DIR, "data")
         os.makedirs(output_dir, exist_ok=True)
-        
+
         output_file = os.path.join(output_dir, "cumulative_koi.csv")
         df.to_csv(output_file, index=False)
 
         logger.info(f"\nArquivo salvo em: {output_file}")
-        
+
         return {"status": "success", "file": output_file}
 
     except requests.exceptions.ChunkedEncodingError as e:
@@ -85,7 +78,7 @@ def download_exoplanet_data(self):
     except requests.exceptions.Timeout as e:
         logger.warning("Timeout: servidor demorou demais para responder")
         logger.warning("Tentando novamente...\n")
-        
+
         raise self.retry(exc=e, countdown=1)
 
     except requests.exceptions.RequestException as e:

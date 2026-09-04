@@ -272,7 +272,7 @@ FEATURES = [
     "koi_steff",
     "koi_slogg",
     "koi_srad",
-    "koi_kepmag"
+    "koi_kepmag",
 ]
 
 TARGET = "koi_disposition"

@@ -7,11 +7,11 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
-    
+
 
 class ExoplanetCandidate(models.Model):
     name = models.CharField(max_length=80)
-    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='exoplanet_candidates')
+    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="exoplanet_candidates")
     orbital_period_days = models.FloatField()
     transit_duration_hours = models.FloatField()
     transit_depth_ppm = models.FloatField()
@@ -47,16 +47,16 @@ class PredictionResult(models.Model):
     probability = models.DecimalField(
         max_digits=5,
         decimal_places=4,
-    )   
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
 
 class ModelRun(models.Model):
     ALGORITHM_CHOICES = [
-        ('logistic_regression', 'Logistic Regression'),
-        ('random_forest', 'Random Forest'),
-        ('svm', 'SVM'),
-        ('gradient_boosting', 'Gradient Boosting'),
+        ("logistic_regression", "Logistic Regression"),
+        ("random_forest", "Random Forest"),
+        ("svm", "SVM"),
+        ("gradient_boosting", "Gradient Boosting"),
     ]
 
     algorithm = models.CharField(max_length=50, choices=ALGORITHM_CHOICES)
@@ -73,7 +73,7 @@ class ModelRun(models.Model):
     model_artifact_path = models.CharField(max_length=255)
 
     class Meta:
-        ordering = ['-trained_at']
+        ordering = ["-trained_at"]
 
     def __str__(self):
         return f"{self.algorithm} — {self.trained_at:%Y-%m-%d %H:%M}"

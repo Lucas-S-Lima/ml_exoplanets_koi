@@ -10,7 +10,17 @@ urlpatterns = [
     path("new-analysis/", views.analyses_form, name="new-analysis"),
     path("my-analyses/", views.my_analyses, name="my-analyses"),
     path("analyses-result/", views.analyses_result, name="analyses-result"),
-    path("analyses-result/<int:analysis_id>/", views.analyses_result, name="analyses-result-detail"),
-    path("analyses-result/<int:analysis_id>/download/", views.download_analysis_result, name="download-analysis-result"),
-    path("analyses-result/<int:analysis_id>/delete/", views.delete_analysis_result, name="delete-analysis-result"),
+    path(
+        "analyses-result/<int:analysis_id>/", views.analyses_result, name="analyses-result-detail"
+    ),
+    path(
+        "analyses-result/<int:analysis_id>/download/",
+        views.download_analysis_result,
+        name="download-analysis-result",
+    ),
+    path(
+        "analyses-result/<int:analysis_id>/delete/",
+        views.delete_analysis_result,
+        name="delete-analysis-result",
+    ),
 ]

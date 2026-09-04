@@ -15,22 +15,24 @@ class PredictionResultAdmin(admin.ModelAdmin):
 
 
 @admin.register(ExoplanetCandidate)
-class ExoplanetCandidateAdmin(admin.ModelAdmin):    
-    list_display = ["name", 
-                    "user", 
-                    "orbital_period_days", 
-                    "transit_duration_hours", 
-                    "transit_depth_ppm", 
-                    "planet_radius_earth", 
-                    "insolation_flux_earth", 
-                    "equilibrium_temperature_k", 
-                    "impact_parameter", 
-                    "transit_signal_to_noise", 
-                    "stellar_effective_temperature_k", 
-                    "stellar_surface_gravity", 
-                    "stellar_radius_solar", 
-                    "kepler_magnitude", 
-                    "created_at"]
+class ExoplanetCandidateAdmin(admin.ModelAdmin):
+    list_display = [
+        "name",
+        "user",
+        "orbital_period_days",
+        "transit_duration_hours",
+        "transit_depth_ppm",
+        "planet_radius_earth",
+        "insolation_flux_earth",
+        "equilibrium_temperature_k",
+        "impact_parameter",
+        "transit_signal_to_noise",
+        "stellar_effective_temperature_k",
+        "stellar_surface_gravity",
+        "stellar_radius_solar",
+        "kepler_magnitude",
+        "created_at",
+    ]
 
     list_filter = ["created_at"]
     search_fields = ["name"]

@@ -84,6 +84,7 @@ print("=" * 60)
 # FUNÇÃO DE PLOTAGEM DA SIGMOIDE (REUTILIZÁVEL)
 # ============================================================
 
+
 def plotar_sigmoide(
     z_test,
     proba_test,
@@ -149,9 +150,7 @@ def plotar_sigmoide(
     ax.set_xlabel("z = β₀ + β₁x₁ + ... + βₙxₙ  (saída linear do modelo)")
     ax.set_ylabel("Probabilidade prevista  σ(z)")
     ax.set_title(
-        "Função Sigmoide aplicada às amostras reais de teste"
-        + titulo_extra
-        + "\n"
+        "Função Sigmoide aplicada às amostras reais de teste" + titulo_extra + "\n"
         f"LogisticRegression (C={melhores_parametros['C']}, "
         f"l1_ratio={melhores_parametros['l1_ratio']}, "
         f"solver={melhores_parametros['solver']})"

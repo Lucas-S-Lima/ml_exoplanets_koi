@@ -77,8 +77,7 @@ class Command(BaseGridSearchCommand):
         ]
 
         melhor_por_kernel = (
-            df_resultados
-            .sort_values("rank_test_f1_macro")
+            df_resultados.sort_values("rank_test_f1_macro")
             .groupby("param_kernel", as_index=False)
             .first()[colunas_kernel]
             .sort_values("mean_test_f1_macro", ascending=False)
@@ -90,18 +89,15 @@ class Command(BaseGridSearchCommand):
         )
 
         comparacao_kernel = (
-            df_resultados
-            .groupby("param_kernel")["mean_test_f1_macro"]
+            df_resultados.groupby("param_kernel")["mean_test_f1_macro"]
             .agg(media="mean", maximo="max", desvio="std")
             .sort_values("maximo", ascending=False)
         )
 
         logger.info("Análise por kernel:\n%s", comparacao_kernel.to_string())
 
-        comparacao_c = (
-            df_resultados
-            .groupby(["param_kernel", "param_C"])["mean_test_f1_macro"]
-            .agg(media="mean", maximo="max", desvio="std")
+        comparacao_c = df_resultados.groupby(["param_kernel", "param_C"])["mean_test_f1_macro"].agg(
+            media="mean", maximo="max", desvio="std"
         )
 
         logger.info("Análise de C (por kernel):\n%s", comparacao_c.to_string())

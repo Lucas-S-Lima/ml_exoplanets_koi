@@ -24,9 +24,7 @@ print(f"ROOT_DIR : {ROOT_DIR}")
 print(f"PKL      : {pkl_path}")
 
 if not pkl_path.exists():
-    raise FileNotFoundError(
-        f"Arquivo não encontrado:\n{pkl_path}"
-    )
+    raise FileNotFoundError(f"Arquivo não encontrado:\n{pkl_path}")
 
 data = joblib.load(pkl_path)
 
@@ -51,22 +49,13 @@ pca = PCA(n_components=2)
 x_train_2d = pca.fit_transform(x_train_scaled)
 
 # 2. Treinamento do SVM RBF no espaço reduzido (2D)
-svm_2d = SVC(
-    kernel="rbf",
-    C=400,
-    gamma="scale",
-    class_weight=None,
-    random_state=42
-)
+svm_2d = SVC(kernel="rbf", C=400, gamma="scale", class_weight=None, random_state=42)
 svm_2d.fit(x_train_2d, y_koi_train)
 
 # 3. Criação da malha (mesh) para delimitar o hiperplano
 x_min, x_max = x_train_2d[:, 0].min() - 1, x_train_2d[:, 0].max() + 1
 y_min, y_max = x_train_2d[:, 1].min() - 1, x_train_2d[:, 1].max() + 1
-xx, yy = np.meshgrid(
-    np.arange(x_min, x_max, 0.02),
-    np.arange(y_min, y_max, 0.02)
-)
+xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.02), np.arange(y_min, y_max, 0.02))
 
 # Predição em toda a extensão da malha
 Z = svm_2d.predict(np.c_[xx.ravel(), yy.ravel()])
@@ -86,7 +75,7 @@ scatter = plt.scatter(
     cmap=plt.cm.coolwarm,
     edgecolors="k",
     alpha=0.6,
-    s=30
+    s=30,
 )
 
 # Destaque dos Vetores de Suporte
@@ -98,7 +87,7 @@ plt.scatter(
     facecolors="none",
     edgecolors="k",
     linewidths=1.2,
-    label="Vetores de Suporte"
+    label="Vetores de Suporte",
 )
 
 plt.title("Fronteira de Decisão do SVM (RBF) via Redução PCA (2D)", fontsize=12)

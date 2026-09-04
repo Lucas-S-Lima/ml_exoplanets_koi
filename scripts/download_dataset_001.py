@@ -33,20 +33,12 @@ print("Iniciando download da NASA Exoplanet Archive\n")
 session = requests.Session()
 
 for attempt in range(1, max_retries + 1):
-
     start_time = time.time()
 
     try:
         print(f"Tentativa {attempt}/{max_retries}")
 
-        response = session.get(
-            url,
-            params={
-                "query": query,
-                "format": "csv"
-            },
-            timeout=timeout
-        )
+        response = session.get(url, params={"query": query, "format": "csv"}, timeout=timeout)
 
         print("Status HTTP:", response.status_code)
         response.raise_for_status()
@@ -68,7 +60,7 @@ for attempt in range(1, max_retries + 1):
         df.to_csv(output_file, index=False)
 
         print(f"\nArquivo salvo em: {output_file}")
-        break 
+        break
 
     except requests.exceptions.ChunkedEncodingError:
         print("Conexão interrompida (ChunkedEncodingError)")
@@ -85,4 +77,3 @@ for attempt in range(1, max_retries + 1):
 
 else:
     print("Falha após múltiplas tentativas. NASA API instável ou rede com problema.")
-

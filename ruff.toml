@@ -1,0 +1,27 @@
+line-length = 100
+target-version = "py313"
+exclude = [
+    "*/migrations/*",
+    ".venv",
+    "venv",
+]
+
+[lint]
+select = [
+    "E", "W", "F", "I", "N", "UP", "B", "DJ", "C4", "SIM",
+]
+ignore = ["E501"]
+
+[lint.per-file-ignores]
+"*/settings*.py" = ["F403", "F405"]
+"*/migrations/*" = ["E501", "N806"]
+"manage.py" = ["E402"]
+
+[lint.isort]
+known-first-party = ["ml_core", "core"]
+section-order = [
+    "future", "standard-library", "third-party", "django", "first-party", "local-folder",
+]
+
+[lint.isort.sections]
+django = ["django"]

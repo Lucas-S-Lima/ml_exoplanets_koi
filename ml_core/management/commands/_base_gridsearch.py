@@ -35,7 +35,6 @@ class BaseGridSearchCommand(BaseCommand):
     default_expected_combinations: int | None = None
     default_pkl_filename: str = "exoplanets_split.pkl"
 
-
     def add_arguments(self, parser):
         parser.add_argument(
             "--filename",
@@ -68,13 +67,11 @@ class BaseGridSearchCommand(BaseCommand):
             help="Nível de verbosidade do GridSearchCV (0-3).",
         )
 
-
     def get_estimator(self):
         raise NotImplementedError
 
     def get_param_grid(self):
         raise NotImplementedError
-
 
     def handle(self, *args, **options):
         self.options = options
@@ -121,7 +118,6 @@ class BaseGridSearchCommand(BaseCommand):
 
         return f"Melhor f1_macro (CV): {grid_search.best_score_:.4f}"
 
-
     def _load_data(self):
         filename = self.options["filename"]
         root_dir = Path(self.options["root_dir"]) if self.options["root_dir"] else None
@@ -138,7 +134,6 @@ class BaseGridSearchCommand(BaseCommand):
         logger.info("x_train: %s | x_test: %s", x_train.shape, x_test.shape)
         return x_train, x_test, y_train, y_test
 
-
     def _validar_param_grid(self, combinacoes, n_esperadas):
         n_combinacoes = len(combinacoes)
 
@@ -146,14 +141,12 @@ class BaseGridSearchCommand(BaseCommand):
 
         if n_combinacoes != n_esperadas:
             mensagem = (
-                f"Esperadas {n_esperadas} combinações, mas foram "
-                f"encontradas {n_combinacoes}."
+                f"Esperadas {n_esperadas} combinações, mas foram encontradas {n_combinacoes}."
             )
             logger.error(mensagem)
             raise CommandError(mensagem)
 
         logger.info("As %d combinações foram confirmadas.", n_esperadas)
-
 
     def _checar_execucao(self, grid_search, combinacoes, n_esperadas):
         resultados = grid_search.cv_results_
@@ -181,7 +174,6 @@ class BaseGridSearchCommand(BaseCommand):
             logger.error(mensagem)
             raise CommandError(mensagem)
 
-
     def _relatorio_execucao(self, grid_search, tempo_total, n_folds):
         resultados = grid_search.cv_results_
         n_combinacoes = len(resultados["params"])
@@ -192,9 +184,7 @@ class BaseGridSearchCommand(BaseCommand):
         n_cpus = os.cpu_count()
         memoria_maxima = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
         memoria_maxima_mb = (
-            memoria_maxima / (1024 ** 2)
-            if platform.system() == "Darwin"
-            else memoria_maxima / 1024
+            memoria_maxima / (1024**2) if platform.system() == "Darwin" else memoria_maxima / 1024
         )
 
         logger.info("Métricas de execução:")
@@ -208,7 +198,6 @@ class BaseGridSearchCommand(BaseCommand):
         logger.info("CPUs disponíveis     : %s", n_cpus)
         logger.info("Memória máxima       : %.2f MB", memoria_maxima_mb)
         logger.info("Combinações x folds  : %d x %d", n_combinacoes, n_folds)
-
 
     def _top_configuracoes(self, grid_search, top_n: int = 10):
         df_resultados = pd.DataFrame(grid_search.cv_results_)
@@ -225,14 +214,9 @@ class BaseGridSearchCommand(BaseCommand):
             *colunas_param,
         ]
 
-        top = (
-            df_resultados[colunas_top]
-            .sort_values("rank_test_f1_macro")
-            .head(top_n)
-        )
+        top = df_resultados[colunas_top].sort_values("rank_test_f1_macro").head(top_n)
 
         logger.info("Top %d configurações (f1_macro):\n%s", top_n, top.to_string(index=False))
-
 
     def _modelo_final(self, grid_search):
         logger.info("Modelo final:")
