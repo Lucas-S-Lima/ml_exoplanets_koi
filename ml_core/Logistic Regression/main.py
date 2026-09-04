@@ -1,22 +1,15 @@
+import sys
+from pathlib import Path
 import pickle
 import pandas as pd
 import joblib
-from pathlib import Path
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
+from ml_core.facade import load_exoplanet_split, get_pickle_filepath, ROOT_DIR
 
 
-ROOT_DIR = Path(__file__).resolve().parents[2]
-
-pkl_path = ROOT_DIR / "exoplanets_split.pkl"
-
-data = joblib.load(pkl_path)
-
-x_koi_train = data["x_train"]
-x_koi_test = data["x_test"]
-
-y_koi_train = data["y_train"]
-y_koi_test = data["y_test"]
+get_pickle_filepath("exoplanets_split.pkl", root_dir=ROOT_DIR) 
+x_koi_train, x_koi_test, y_koi_train, y_koi_test = load_exoplanet_split("exoplanets_split.pkl", ROOT_DIR)
 
 
 logistic_regression = LogisticRegression(
@@ -27,7 +20,7 @@ logistic_regression = LogisticRegression(
     random_state=42,
 )
 
-logistic_regression.fit(x_koi_train, y_koi_train)
+logistic_regression.fit(x_koi_train, y_koi_train)   
 
 print("Logistic Regression model trained successfully.")
 print("Intercept:", logistic_regression.intercept_)
