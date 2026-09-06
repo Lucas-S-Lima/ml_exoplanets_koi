@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 
 
 DEFAULT_FILENAME = "exoplanets_split.pkl"
-ROOT_DIR = Path(__file__).resolve().parents[2]
+ROOT_DIR = Path(__file__).resolve().parents[1]
 
 
 def get_pickle_filepath(filename: str = DEFAULT_FILENAME, root_dir: Path | None = None) -> Path:
