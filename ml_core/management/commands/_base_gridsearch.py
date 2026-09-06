@@ -10,7 +10,7 @@ import pandas as pd
 from django.core.management.base import BaseCommand, CommandError
 from sklearn.model_selection import GridSearchCV, ParameterGrid, StratifiedKFold
 
-from ml_core.facade import load_exoplanet_split
+from ml_core.utils import load_exoplanet_split
 
 logger = logging.getLogger(__name__)
 
