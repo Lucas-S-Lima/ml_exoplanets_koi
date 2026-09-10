@@ -60,7 +60,17 @@ def get_logistic_regression_metrics(model, x_test, y_test) -> dict:
 
 def get_logistic_regression_confusion_matrix(model, x_test, y_test):
     predictions = logistic_regression_predict(model, x_test)
-    return confusion_matrix(y_test, predictions)
+    cm = confusion_matrix(y_test, predictions)
+    
+    tn, fp, fn, tp = cm.ravel()
+
+    return {
+        "confusion_matrix": cm.tolist(),
+        "true_positive": int(tp),
+        "true_negative": int(tn),
+        "false_positive": int(fp),
+        "false_negative": int(fn),
+    }
 
 
 def random_forest_model(
@@ -110,7 +120,17 @@ def get_random_forest_metrics(model, x_test, y_test) -> dict:
 
 def get_random_forest_confusion_matrix(model, x_test, y_test):
     predictions = random_forest_predict(model, x_test)
-    return confusion_matrix(y_test, predictions)
+    cm = confusion_matrix(y_test, predictions)
+            
+    tn, fp, fn, tp = cm.ravel()
+
+    return {
+        "confusion_matrix": cm.tolist(),
+        "true_positive": int(tp),
+        "true_negative": int(tn),
+        "false_positive": int(fp),
+        "false_negative": int(fn),
+    }
 
 
 def svm_model(
@@ -133,13 +153,25 @@ def get_svm_metrics(model, x_test, y_test) -> dict:
     predictions = svm_predict(model, x_test)
 
     return {
-        "predictions": predictions,
-        "test_score": model.score(x_test, y_test),
-        "accuracy": accuracy_score(y_test, predictions),
-        "classification_report": classification_report(y_test, predictions),
+            "intercept": model.intercept_,
+            "coefficients": model.coef_,
+            "predictions": predictions,
+            "test_score": model.score(x_test, y_test),
+            "accuracy": accuracy_score(y_test, predictions),
+            "classification_report": classification_report(y_test, predictions),
     }
 
 
 def get_svm_confusion_matrix(model, x_test, y_test):
     predictions = svm_predict(model, x_test)
-    return confusion_matrix(y_test, predictions)
+    cm = confusion_matrix(y_test, predictions)
+            
+    tn, fp, fn, tp = cm.ravel()
+
+    return {
+        "confusion_matrix": cm.tolist(),
+        "true_positive": int(tp),
+        "true_negative": int(tn),
+        "false_positive": int(fp),
+        "false_negative": int(fn),
+    }
