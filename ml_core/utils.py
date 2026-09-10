@@ -1,19 +1,19 @@
 from pathlib import Path
 import joblib
+from django.conf import settings
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 
-DEFAULT_FILENAME = "exoplanets_split.pkl"
-ROOT_DIR = Path(__file__).resolve().parents[1]
+DEFAULT_FILENAME = settings.DEFAULT_FILENAME
+ROOT_DIR = settings.ROOT_DIR
 
 
 def get_pickle_filepath(filename: str = DEFAULT_FILENAME, root_dir: Path | None = None) -> Path:
 
     root_dir = root_dir or ROOT_DIR
-
     return root_dir / filename
 
 
@@ -25,7 +25,30 @@ def load_exoplanet_split(filename: str = DEFAULT_FILENAME, root_dir: Path | None
     return raw["x_train"], raw["x_test"], raw["y_train"], raw["y_test"]
 
 
-def logistic_regression_model(
+def get_model_metrics(model, x_test, y_test, predictions) -> dict:
+    return {
+        "intercept": getattr(model, "intercept_", None),
+        "coefficients": getattr(model, "coef_", None),
+        "test_score": model.score(x_test, y_test),
+        "accuracy": accuracy_score(y_test, predictions),
+        "classification_report": classification_report(y_test, predictions),
+    }
+
+
+def get_model_confusion_matrix(model, x_test, y_test, predictions) -> dict:
+    cm = confusion_matrix(y_test, predictions)
+    tn, fp, fn, tp = cm.ravel()
+
+    return {
+        "confusion_matrix": cm.tolist(),
+        "true_positive": int(tp),
+        "true_negative": int(tn),
+        "false_positive": int(fp),
+        "false_negative": int(fn),
+    }
+
+
+def logistic_regression_model_training(
     x_train, y_train, l1_ratio=0.0, C=3000, solver="lbfgs", max_iter=2000, random_state=42
 ):
 
@@ -41,39 +64,7 @@ def logistic_regression_model(
     return model
 
 
-def logistic_regression_predict(model, x_test):
-    return model.predict(x_test)
-
-
-def get_logistic_regression_metrics(model, x_test, y_test) -> dict:
-    predictions = logistic_regression_predict(model, x_test)
-
-    return {
-        "intercept": model.intercept_,
-        "coefficients": model.coef_,
-        "predictions": predictions,
-        "test_score": model.score(x_test, y_test),
-        "accuracy": accuracy_score(y_test, predictions),
-        "classification_report": classification_report(y_test, predictions),
-    }
-
-
-def get_logistic_regression_confusion_matrix(model, x_test, y_test):
-    predictions = logistic_regression_predict(model, x_test)
-    cm = confusion_matrix(y_test, predictions)
-    
-    tn, fp, fn, tp = cm.ravel()
-
-    return {
-        "confusion_matrix": cm.tolist(),
-        "true_positive": int(tp),
-        "true_negative": int(tn),
-        "false_positive": int(fp),
-        "false_negative": int(fn),
-    }
-
-
-def random_forest_model(
+def random_forest_model_training(
     x_train,
     y_train,
     n_estimators=200,
@@ -101,39 +92,7 @@ def random_forest_model(
     return model
 
 
-def random_forest_predict(model, x_test):
-    return model.predict(x_test)
-
-
-def get_random_forest_metrics(model, x_test, y_test) -> dict:
-    predictions = random_forest_predict(model, x_test)
-
-    return {
-        "intercept": model.intercept_,
-        "coefficients": model.coef_,
-        "predictions": predictions,
-        "test_score": model.score(x_test, y_test),
-        "accuracy": accuracy_score(y_test, predictions),
-        "classification_report": classification_report(y_test, predictions),
-    }
-
-
-def get_random_forest_confusion_matrix(model, x_test, y_test):
-    predictions = random_forest_predict(model, x_test)
-    cm = confusion_matrix(y_test, predictions)
-            
-    tn, fp, fn, tp = cm.ravel()
-
-    return {
-        "confusion_matrix": cm.tolist(),
-        "true_positive": int(tp),
-        "true_negative": int(tn),
-        "false_positive": int(fp),
-        "false_negative": int(fn),
-    }
-
-
-def svm_model(
+def svm_model_training(
     x_train, y_train, kernel="rbf", C=400, gamma=0.05, class_weight=None, random_state=42
 ):
 
@@ -145,33 +104,44 @@ def svm_model(
     return model
 
 
+def logistic_regression_predict(model, x_test):
+    return model.predict(x_test)
+
+
+def get_logistic_regression_metrics(model, x_test, y_test) -> dict:
+    predictions = logistic_regression_predict(model, x_test)
+    return get_model_metrics(model, x_test, y_test, predictions)
+
+
+def get_logistic_regression_confusion_matrix(model, x_test, y_test):
+    predictions = logistic_regression_predict(model, x_test)
+    return get_model_confusion_matrix(model, x_test, y_test, predictions)
+
+
+def random_forest_predict(model, x_test):
+    return model.predict(x_test)
+
+
+def get_random_forest_metrics(model, x_test, y_test) -> dict:
+    predictions = random_forest_predict(model, x_test)
+    return get_model_metrics(model, x_test, y_test, predictions)
+
+
+def get_random_forest_confusion_matrix(model, x_test, y_test):
+    predictions = random_forest_predict(model, x_test)
+    return get_model_confusion_matrix(model, x_test, y_test, predictions)
+
+
 def svm_predict(model, x_test):
     return model.predict(x_test)
 
 
 def get_svm_metrics(model, x_test, y_test) -> dict:
     predictions = svm_predict(model, x_test)
-
-    return {
-            "intercept": model.intercept_,
-            "coefficients": model.coef_,
-            "predictions": predictions,
-            "test_score": model.score(x_test, y_test),
-            "accuracy": accuracy_score(y_test, predictions),
-            "classification_report": classification_report(y_test, predictions),
-    }
+    return get_model_metrics(model, x_test, y_test, predictions)
 
 
 def get_svm_confusion_matrix(model, x_test, y_test):
     predictions = svm_predict(model, x_test)
-    cm = confusion_matrix(y_test, predictions)
-            
-    tn, fp, fn, tp = cm.ravel()
+    return get_model_confusion_matrix(model, x_test, y_test, predictions)
 
-    return {
-        "confusion_matrix": cm.tolist(),
-        "true_positive": int(tp),
-        "true_negative": int(tn),
-        "false_positive": int(fp),
-        "false_negative": int(fn),
-    }

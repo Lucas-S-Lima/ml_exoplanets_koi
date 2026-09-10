@@ -168,3 +168,7 @@ CELERY_TIMEZONE = TIME_ZONE
 CELERY_ACCEPT_CONTENT = ["json"]
 
 CELERY_TASK_SERIALIZER = "json"
+
+DEFAULT_FILENAME = "exoplanets_split.pkl"
+
+ROOT_DIR = Path(__file__).resolve().parents[1]
