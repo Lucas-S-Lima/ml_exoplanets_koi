@@ -2,25 +2,20 @@ from django.urls import path
 from core import views
 
 urlpatterns = [
-    path("", views.home, name="home"),
-    path("login/", views.login_view, name="login"),
-    path("logout/", views.logout_view, name="logout"),
-    path("analyses-form/", views.analyses_form, name="analyses-form"),
-    path("new-analyses/", views.analyses_form, name="new-analyses"),
-    path("new-analysis/", views.analyses_form, name="new-analysis"),
-    path("my-analyses/", views.my_analyses, name="my-analyses"),
-    path("analyses-result/", views.analyses_result, name="analyses-result"),
-    path(
-        "analyses-result/<int:analysis_id>/", views.analyses_result, name="analyses-result-detail"
-    ),
-    path(
-        "analyses-result/<int:analysis_id>/download/",
-        views.download_analysis_result,
-        name="download-analysis-result",
-    ),
-    path(
-        "analyses-result/<int:analysis_id>/delete/",
-        views.delete_analysis_result,
-        name="delete-analysis-result",
-    ),
+    # Endpoints for exoplanet candidate registration and prediction
+    #path("register-exoplanet/", views.register_exoplanet, name="register_exoplanet"),
+    #path("register-csv-exoplanets/", views.register_csv_exoplanets, name="register_csv_exoplanets"),
+    #path("predict-exoplanets/", views.predict_exoplanet, name="predict_exoplanet"),
+    #path("predict-exoplanet/<int:candidate_id>/", views.predict_exoplanet, name="predict_exoplanet"),
+    #path("get-prediction-result/<int:candidate_id>/", views.get_predictions, name="get_predictions"),
+    #path("get-prediction-results/", views.get_user_exoplanets, name="get_user_exoplanets"),
+
+    # Endpoints to get evaluated exoplanets information
+    #path("evaluated-exoplanets/", views.get_evaluated_exoplanets, name="get_evaluated_exoplanets"),
+    path("evaluated-exoplanets/", views.get_evaluated_exoplanets, name="get_evaluated_exoplanets"),
+
+    # Endpoints for authentication
+    #path("register-user/", views.register_user, name="register_user"),
+    #path("obtain-token/", views.obtain_token, name="obtain_token"),
+    #path("refresh-token/", views.refresh_token, name="refresh_token"),
 ]
